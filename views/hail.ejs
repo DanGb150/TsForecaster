@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hailpro</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style2.css">
+</head>
+
+<body>
+    <%-include('nav.ejs')%>
+        <h1>Hailpro</h1>
+        <div class="cont">
+            <h2 id="h2con">Please complete the following form to find the likelihood of hail</h2>
+            <form class="form" action="/hail">
+                <div class="inp">
+                    <label for="frin">Freezing Level:</label>
+                    <input type="number" id="frin" name="frin"><span>hPa</span>
+                    <label for="ccin">CCL:</label>
+                    <input type="number" id="ccin" name="ccin"><span>hPa</span>
+                    <label for="frin">EL:</label>
+                    <input type="number" id="elin" name="elin"><span>hPa</span>
+                </div>
+                <button>Submit</button>
+            </form>
+            <div class="chart-container">
+                <div class="chart">
+                    <div id="sp1">.340</div>
+                    <div id="sp2">610</div>
+                    <div id="line1"></div>
+                    <div id="line2"></div>
+                </div>
+                <form action="/" method="post" class="form2">
+                    <input type="text" name="trf" id="trf">
+                    <button>Return to Homepage</button>
+                </form>
+            </div>
+        </div>
+        <script src="/js/hailpro.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TsForecaster</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style3.css">
+</head>
+
+<body>
+    <%-include('nav.ejs')%>
+        <div class="links-container">
+            <section class="links">
+                <p>Model: <a
+                        href="https://www.pivotalweather.com/model.php?m=gfs&p=prateptype_cat_mm&rh=2022050206&fh=loop&r=eu&dpdt=&mc=">GFS</a>
+                    - Best for precip in mid-long term period</p>
+                <p>Model: <a
+                        href="https://www.pivotalweather.com/model.php?m=ecmwf&p=prateptype_cat_mm&rh=2022050206&fh=loop&r=eu&dpdt=&mc=">ECMWF</a>
+                    - Good for any period of time</p>
+                <p>Model: <a
+                        href="https://wxcharts.com/?panel=default&model=icon_eu,icon_eu,icon_eu,icon_eu&region=romania&chart=overview,850temp,wind10mkph,snowdepth&run=06&step=003&plottype=10&lat=44.942&lon=26.024&skewtstep=0">
+                        ICON</a> - Best for detailed first 2 days look</p>
+                <p>Model: <a
+                        href="https://www.pivotalweather.com/model.php?m=gefsens&p=sfcmslp&rh=2022050200&fh=loop&r=eu&dpdt=&mc=">GEFS</a>
+                    - Worst - needs a high calibration!</p>
+            </section>
+        </div>
+        <h1>How did we obtain our data?</h1>
+        <h3 class="h3">forecast vs verification- maxT and afternoon precip(12-15 UTC)-morning model(00
+            UTC)</h3>
+        <h3 class="h3">Data from 14may to 1 june</h3>
+        <form action="/data" method="POST">
+            <section class="panels not-expanded" id="tmpanels">
+                <h3>Temperature at 2m</h3>
+                <span class="color-picker">
+                    <p>Error of less than -2</p>
+                    <div class="choose blue"></div>
+                    <p>Error of -2 </p>
+                    <div class="choose cyan"></div>
+                    <p>Correct forecast</p>
+                    <div class="choose white"></div>
+                    <p>Error of +2</p>
+                    <div class="choose orange"></div>
+                    <p>Error of more than +2 </p>
+                    <div class="choose red"></div>
+                </span>
+                <div class="pn tm" id="1">
+                    <h2 class="h2">
+                        GFS
+                    </h2>
+                </div>
+                <div class="pn tm" id="2">
+                    <h2 class="h2">ECMWF</h2>
+                </div>
+                <div class="pn tm" id="3">
+                    <h2 class="h2">ICON</h2>
+                </div>
+                <div class=" pn tm" id="4">
+                    <h2 class="h2">GEFS</h2>
+                </div>
+            </section>
+            <div class="container">
+                <div class="row">
+                    <button class="btn btn-success col-2 offset-5">Save</button>
+                </div>
+            </div>
+            <section class="panels not-expanded" id="prpanels">
+                <h3>Precipitation</h3>
+                <span class="color-picker">
+                    <p>Too dry </p>
+                    <div class="choose darkgoldenrod"></div>
+                    <p>Correct forecast</p>
+                    <div class="choose white"></div>
+                    <p>Too rainy </p>
+                    <div class="choose aqua"></div>
+                </span>
+                <div class="pn pr" id="5">
+                    <h2 class="h2">GFS</h2>
+                </div>
+                <div class="pn pr" id="6">
+                    <h2 class="h2">ECMWF</h2>
+                </div>
+                <div class="pn pr" id="7">
+                    <h2 class="h2">ICON</h2>
+                </div>
+                <div class="pn pr" id="8">
+                    <h2 class="h2">GEFS</h2>
+                </div>
+            </section>
+        </form>
+        <h1>Results of studies:</h1>
+        <section class="results">
+            <div class=" BS BST">
+                <h4>Temperature Hit Probability:</h4>
+            </div>
+            <div class=" BS BSM">
+                <h4>Model Accuracy:</h4>
+            </div>
+            <div class=" BS BSP">
+                <h4>Precipitation Hit Probability:</h4>
+
+            </div>
+        </section>
+        <h1>Advanced results:</h1>
+        <section class="results">
+            <div class="BS AC CL">
+                <h2 id="notes">Notes:</h2>
+            </div>
+            <div class="BS AC SH">
+                <h4>Short Range Accuracy <b>(Day1-Day2)</b> :</h4>
+
+            </div>
+            <div class=" BS AC MD">
+                <h4>Medium Range Accuracy <b>(Day3-Day5)</b> :</h4>
+
+            </div>
+            <div class=" BS AC LG">
+                <h4>Long Range Accuracy <b>(Day6-Day10)</b> :</h4>
+            </div>
+            <div style='width:90vw'>
+            <div>
+                <div class="BS AC SGT">
+                  <h4>Short Range Accuracy --Temperature <b>(Day6-Day10)</b> :</h4>
+                </div>
+                <div class="BS AC SGP">
+                  <h4>Short Range Accuracy --Precip <b>(Day6-Day10)</b> :</h4>
+                </div>
+            </div>
+            <div>
+                <div class="BS AC MGT">
+                  <h4>Medium Range Accuracy --Temperature <b>(Day6-Day10)</b> :</h4>
+                </div>
+                <div class="BS AC MGP">
+                  <h4>Medium Range Accuracy --Precip <b>(Day6-Day10)</b> :</h4>
+                </div>
+            </div>
+            <div>
+              <div class="BS AC LGT">
+                <h4>Long Range Accuracy --Temperature <b>(Day6-Day10)</b> :</h4>
+              </div>
+              <div class="BS AC LGP">
+                <h4>Long Range Accuracy --Precip <b>(Day6-Day10)</b> :</h4>
+              </div>
+            </div>
+        </div>
+        </section>
+        <P>
+        </P>
+        <script>
+            //CARDS AND LOAD DATA
+            const sections = document.querySelectorAll('.panels')
+            const h2s = document.querySelectorAll('.h2')
+            const BST = document.querySelector('.BST')
+            const BSP = document.querySelector('.BSP')
+            const BSM = document.querySelector('.BSM')
+            const SH = document.querySelector('.SH')
+            const SGP=document.querySelector('.SGP')
+            const SGT=document.querySelector('.SGT')
+            const MD = document.querySelector('.MD')
+            const MGP=document.querySelector('.MGP')
+            const MGT=document.querySelector('.MGT')
+            const LG = document.querySelector('.LG')
+            const LGP=document.querySelector('.LGP')
+            const LGT=document.querySelector('.LGT')
+            const CL = document.querySelector('.CL')
+
+            h2s.forEach((h2, i) => {
+                h2.addEventListener('click', () => {
+                    if (i < 4) {
+                        sections[0].classList.toggle('not-expanded')
+                    }
+                    else { sections[1].classList.toggle('not-expanded') }
+                })
+            })
+            let newar = []
+            let nr = 0;
+            let value = "<%=JSON.stringify(obj)%>"
+            let ar = Object.values(value)
+            for (let i = 1; i <= ar.length; i++) {
+                let el = ar[i]
+                if (el === '/') {
+                    let found = ar.slice(i - 2, i + 3)
+                    let el = found.join('')
+                    newar.splice(i, 0, el)
+                }
+            }
+            //CREATE TABLES
+            function createTable(loc, cols, rows) {
+                const cellnum = cols * rows;
+                totalcells.push(cellnum)
+                colsar.push(cols)
+                rowsar.push(rows)
+                let blue = 0;
+                let white = 0;
+                let red = 0;
+                let aqua = 0;
+                let orange = 0;
+                let whitesh = 0;
+                let whitemd = 0;
+                let whitelg = 0;
+                const table = document.createElement('table')
+                table.classList.add('table')
+                loc.appendChild(table)
+                table.style.height = '70%'
+                table.style.width = '100%'
+                const thead = document.createElement('thead')
+                table.appendChild(thead)
+                const tr = document.createElement('tr')
+                thead.appendChild(tr)
+                const th = document.createElement('th')
+                th.setAttribute('scope', 'col')
+                th.innerText = 'Run/Day'
+                tr.appendChild(th)
+                for (let days = 1; days <= cols; days++) {
+                    const th = document.createElement('th')
+                    th.setAttribute('scope', 'col')
+                    th.innerText = `${days}`
+                    tr.appendChild(th)
+                }
+                const tbody = document.createElement('tbody')
+                table.appendChild(tbody)
+                for (let runs = 1; runs <= rows; runs++) {
+                    const tr = document.createElement('tr')
+                    tbody.appendChild(tr)
+                    const th = document.createElement('th')
+                    th.setAttribute('scope', 'row')
+                    th.innerText = `${runs}`
+                    tr.appendChild(th)
+                    for (let days = 1; days <= cols; days++) {
+                        const td = document.createElement('td')
+                        td.classList.add('cell')
+                        tr.appendChild(td)
+                        const input = document.createElement('input')
+                        input.setAttribute('type', 'text')
+                        input.setAttribute('id', `${nr}`)
+                        input.setAttribute('name', `${nr}`)
+                        input.value = 'fc/vf'
+                        if (newar[nr]) {
+                            input.value = newar[nr]
+                            input.innerText = newar[nr]
+                        }
+                        td.appendChild(input)
+                        input.classList.add('input')
+                        nr++;
+                        let aro = input.value.split('/')
+                        if (aro[0] == 'pr' || aro[1] == 'pr' || aro[0] == 'np' || aro[1] == 'np') {
+                            let forecast = aro[0]
+                            let verification = aro[1]
+                            if (forecast == verification) {
+                                white++;
+                                if (days < 3) { whitesh++ }
+                                else if (days < 6) { whitemd++ }
+                                else { whitelg++;}
+                                td.setAttribute('style', 'background-color:white')
+                            }
+                            else if (forecast == 'pr' && verification == 'np') {
+                                aqua++
+                                td.setAttribute('style', 'background-color:aqua')
+                            }
+                            else if (forecast == 'np' && verification == 'pr') {
+                                orange++
+                                td.setAttribute('style', 'background-color:darkgoldenrod')
+                            }
+                        }
+                        else {
+                            let forecast = parseInt(aro[0])
+                            let verification = parseInt(aro[1])
+                            let dif = verification - forecast
+                            dif = dif || 0
+                            differences.push(dif)
+                            if (forecast >= 10 && verification >= 10) {
+                                if (verification < forecast + 2 && verification > forecast - 2) {
+                                    if (days < 3) { whitesh++ }
+                                    else if (days < 6) { whitemd++ }
+                                    else { whitelg++}
+                                    white++;
+                                    td.setAttribute('style', 'background-color:white')
+                                }
+                                else if (verification == forecast - 2) {
+                                    red = red + 0.5;
+                                    white = white + 0.5;
+                                    if (days < 3) { whitesh = whitesh + 0.5 }
+                                    else if (days < 6) { whitemd = whitemd + 0.5 }
+                                    else { whitelg = whitelg + 0.5}
+                                    td.setAttribute('style', 'background-color: rgb(231, 79, 59)')
+                                }
+                                else if (verification < forecast - 2) {
+                                    red++;
+                                    td.setAttribute('style', 'background-color:red')
+                                }
+                                else if (verification == forecast + 2) {
+                                    blue = blue + 0.5;
+                                    white = white + 0.5;
+                                    if (days < 3) { whitesh = whitesh + 0.5 }
+                                    else if (days < 6) { whitemd = whitemd + 0.5 }
+                                    else { whitelg = whitelg + 0.5}
+                                    td.setAttribute('style', 'background-color:rgb(54, 140, 211)')
+                                }
+                                else if (verification > forecast + 2) {
+                                    blue++;
+                                    td.setAttribute('style', 'background-color:blue')
+                                }
+                            }
+                        }
+                    }
+                }
+                correct.push(white)
+                correctshort.push(whitesh)
+                correctmedium.push(whitemd)
+                correctlong.push(whitelg)
+                lesst.push(blue)
+                moret.push(red)
+                lessp.push(orange)
+                morep.push(aqua)
+            }
+            colsar = []
+            rowsar = []
+            totalcells = []
+            correct = []
+            correctshort = []
+            correctmedium = []
+            correctlong = []
+            lesst = []
+            moret = []
+            lessp = []
+            morep = []
+            differences = []
+            const models = ['GFS', 'ECMWF', 'ICON', 'GEFS', 'GFS', 'ECMWF', 'ICON', 'GEFS']
+            const panels = document.querySelectorAll('.pn')
+            createTable(panels[0], 10, 10)
+            createTable(panels[1], 10, 10)
+            createTable(panels[2], 5, 10)
+            createTable(panels[3], 10, 10)
+            createTable(panels[4], 10, 10)
+            createTable(panels[5], 10, 10)
+            createTable(panels[6], 5, 10)
+            createTable(panels[7], 10, 10)
+            //GENERAL DATA
+            for (i = 0; i < totalcells.length; i++) {
+                const BsScore = document.createElement('h6')
+                BsScore.innerText = `${models[i]} - ${Math.floor(correct[i] / totalcells[i] * 100)}%`
+                if (correct[i] / totalcells[i] * 100 < 50) {
+                    BsScore.style.color = 'rgb(212,75,69)'
+                }
+                else if (correct[i] / totalcells[i] * 100 < 75) {
+                    BsScore.style.color = 'rgb(212,201,53)'
+                }
+                else { BsScore.style.color = 'rgb(87,212,53)' }
+                if (i < 4) {
+                    BST.appendChild(BsScore)
+                }
+                else { BSP.appendChild(BsScore) }
+                if (i < 4) {
+                    const BsMedium = document.createElement('h6')
+                    let total = Math.floor((correct[i] / totalcells[i] + correct[i + 4] / totalcells[i + 4]) / 2 * 100)
+                    BsMedium.innerText = `${models[i]} - ${total}%`
+                    if (total < 50) {
+                        BsMedium.style.color = 'rgb(212,75,69)'
+                    }
+                    else if (total < 75) {
+                        BsMedium.style.color = 'rgb(212,201,53)'
+                    }
+                    else { BsMedium.style.color = 'rgb(87,212,53)' }
+                    BSM.appendChild(BsMedium)
+                }
+            }
+
+            //SHORT RANGE DATA
+            for (i = 0; i < 4; i++) {
+                const BsShort = document.createElement('h6')
+                const medians = Math.floor((correctshort[i] / (2 * rowsar[i]) + correctshort[i + 4] / (2 * rowsar[i + 4])) / 2 * 100)
+                BsShort.innerText = `${models[i]} - ${medians}% `
+                if (medians < 50) {
+                    BsShort.style.color = 'rgb(212,75,69)'
+                }
+                else if (medians < 75) {
+                    BsShort.style.color = 'rgb(212,201,53)'
+                }
+                else { BsShort.style.color = 'rgb(87,212,53)' }
+                SH.appendChild(BsShort)
+            }
+            for (i = 0; i < 4; i++) {
+                const BsShort = document.createElement('h6')
+                const medians = Math.floor((correctshort[i] / (2 * rowsar[i])) * 100)
+                BsShort.innerText = `${models[i]} - ${medians}% `
+                if (medians < 50) {
+                    BsShort.style.color = 'rgb(212,75,69)'
+                }
+                else if (medians < 75) {
+                    BsShort.style.color = 'rgb(212,201,53)'
+                }
+                else { BsShort.style.color = 'rgb(87,212,53)' }
+                SGT.appendChild(BsShort)
+            }
+            for (i = 0; i < 4; i++) {
+                const BsShort = document.createElement('h6')
+                const medians = Math.floor((correctshort[i+4] / (2 * rowsar[i+4])) * 100)
+                BsShort.innerText = `${models[i]} - ${medians}% `
+                if (medians < 50) {
+                    BsShort.style.color = 'rgb(212,75,69)'
+                }
+                else if (medians < 75) {
+                    BsShort.style.color = 'rgb(212,201,53)'
+                }
+                else { BsShort.style.color = 'rgb(87,212,53)' }
+                SGP.appendChild(BsShort)
+            }
+            //MEDIUM RANGE DATA
+            for (i = 0; i < 4; i++) {
+                const BsMedium = document.createElement('h6')
+                const medianm = Math.floor((correctmedium[i] / (3 * rowsar[i]) + correctmedium[i + 4] / (3 * rowsar[i + 4])) / 2 * 100)
+                BsMedium.innerText = `${models[i]} - ${medianm}% `
+                if (medianm < 50) {
+                    BsMedium.style.color = 'rgb(212,75,69)'
+                }
+                else if (medianm < 75) {
+                    BsMedium.style.color = 'rgb(212,201,53)'
+                }
+                else { BsMedium.style.color = 'rgb(87,212,53)' }
+                MD.appendChild(BsMedium)
+            }
+            for (i = 0; i < 4; i++) {
+                const BsMedium = document.createElement('h6')
+                const medianm = Math.floor((correctmedium[i] / (3 * rowsar[i])) * 100)
+                BsMedium.innerText = `${models[i]} - ${medianm}% `
+                if (medianm < 50) {
+                    BsMedium.style.color = 'rgb(212,75,69)'
+                }
+                else if (medianm < 75) {
+                    BsMedium.style.color = 'rgb(212,201,53)'
+                }
+                else { BsMedium.style.color = 'rgb(87,212,53)' }
+                MGT.appendChild(BsMedium)
+            }
+            for (i = 0; i < 4; i++) {
+                const BsMedium = document.createElement('h6')
+                const medianm = Math.floor((correctmedium[i+4] / (3 * rowsar[i+4])) * 100)
+                BsMedium.innerText = `${models[i]} - ${medianm}% `
+                if (medianm < 50) {
+                    BsMedium.style.color = 'rgb(212,75,69)'
+                }
+                else if (medianm < 75) {
+                    BsMedium.style.color = 'rgb(212,201,53)'
+                }
+                else { BsMedium.style.color = 'rgb(87,212,53)' }
+                MGP.appendChild(BsMedium)
+            }
+            //LONG RANGE DATA
+            for (i = 0; i < 4; i++) {
+                if (i != 2) {
+                    const BsLarge = document.createElement('h6')
+                    const medianl = Math.floor((correctlong[i] / (5 * rowsar[i]) + correctlong[i + 4] / (5 * rowsar[i + 4])) / 2 * 100)
+                    BsLarge.innerText = `${models[i]} - ${medianl}% `
+                    if (medianl < 50) {
+                        BsLarge.style.color = 'rgb(212,75,69)'
+                    }
+                    else if (medianl < 75) {
+                        BsLarge.style.color = 'rgb(212,201,53)'
+                    }
+                    else { BsLarge.style.color = 'rgb(87,212,53)' }
+                    LG.appendChild(BsLarge)
+                }
+            }
+            for (i = 0; i < 4; i++) {
+                if (i != 2) {
+                    const BsLarge = document.createElement('h6')
+                    const medianl = Math.floor((correctlong[i+4] / (5 * rowsar[i]))* 100)
+                    BsLarge.innerText = `${models[i]} - ${medianl}% `
+                    if (medianl < 50) {
+                        BsLarge.style.color = 'rgb(212,75,69)'
+                    }
+                    else if (medianl < 75) {
+                        BsLarge.style.color = 'rgb(212,201,53)'
+                    }
+                    else { BsLarge.style.color = 'rgb(87,212,53)' }
+                    LGP.appendChild(BsLarge)
+                }
+            }
+            for (i = 0; i < 4; i++) {
+                if (i != 2) {
+                    const BsLarge = document.createElement('h6')
+                    const medianl = Math.floor((correctlong[i] / (5 * rowsar[i+4]))* 100)
+                    BsLarge.innerText = `${models[i]} - ${medianl}% `
+                    if (medianl < 50) {
+                        BsLarge.style.color = 'rgb(212,75,69)'
+                    }
+                    else if (medianl < 75) {
+                        BsLarge.style.color = 'rgb(212,201,53)'
+                    }
+                    else { BsLarge.style.color = 'rgb(87,212,53)' }
+                    LGT.appendChild(BsLarge)
+                }
+            }
+            //CALCULATE THE CALIBRATION
+            calibs = []
+            let total = 0
+            let init = 0
+            for (i = 0; i < 4; i++) {
+                let calib = 0
+                total = total + totalcells[i]
+                for (j = init; j < total; j++) {
+                    calib = calib + differences[j]
+                }
+                init = init + totalcells[i]
+                calibs.push(calib / totalcells[i])
+            }
+            //CALIBT
+            for (i = 0; i < 4; i++) {
+                if (calibs[i] <= 0.25 && calibs[i] >= -0.25) {
+                    const concl = document.createElement('h6')
+                    concl.innerText = ` - ${models[i]} is well balanced`
+                    CL.appendChild(concl)
+                }
+                if ((lesst[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100 && lesst[i] / totalcells[i] * 100 > moret[i] / totalcells[i] * 100) || calibs[i] >= 1) {
+                    const concl = document.createElement('h6')
+                    concl.innerText = ` - ${models[i]} needs a calibration of +${Math.round(calibs[i] * 10) / 10} deg C`
+                    CL.appendChild(concl)
+                }
+                else if ((moret[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100) || calibs[i] <= -1) {
+                    const concl = document.createElement('h6')
+                    concl.innerText = ` - ${models[i]} needs a calibration of ${Math.round(calibs[i] * 10) / 10} deg C`
+                    CL.appendChild(concl)
+                }
+            }
+            //CALIBP
+            for (i = 3; i < 8; i++) {
+                if (lessp[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100 && lessp[i] / totalcells[i] * 100 > morep[i] / totalcells[i] * 100) {
+                    const concl = document.createElement('h6')
+                    concl.innerText = ` - ${models[i]} tends to forecast too dry conditions`
+                    CL.appendChild(concl)
+                }
+                else if (morep[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100 && morep[i] / totalcells[i] * 100 > lessp[i] / totalcells[i] * 100) {
+                    const concl = document.createElement('h6')
+                    concl.innerText = ` - ${models[i]} tends to forecast too rainy conditions`
+                    CL.appendChild(concl)
+                }
+            }
+        </script>
+</body>
+
+</html>

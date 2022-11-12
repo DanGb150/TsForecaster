@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
+h1 {
+    margin-top: 15px;
+    text-align: center;
+    color: rgb(255, 255, 255)
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.4px;
+    background-image: radial-gradient(rgb(10, 25, 70), rgb(28, 3, 48), rgb(0, 0, 0));
+    color: white;
+    transition: display 2s ease-out;
+    overflow-x: hidden;
+}
+
+.links-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    font-size: 24px;
+}
+
+h1,
+.h3 {
+    margin-bottom: 20px;
+}
+
+.h3 {
+    font-size: 38px;
+}
+
+.links a {
+    text-decoration: none;
+    margin-left: 10px;
+    color: rgb(0, 73, 168);
+}
+
+.panels {
+    border: 4px solid rgb(255, 255, 255);
+    color: white;
+    width: 90%;
+    height: fit-content;
+    background-color: rgba(172, 166, 255, 0.185);
+    margin-bottom: 30px;
+    margin-left: 5vw;
+    margin-right: 5vw;
+    display: flex;
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px 2px #061ea5
+}
+
+.pn {
+    background-color: rgba(5, 40, 56, 0.466);
+    width: 48%;
+    height: fit-content;
+    margin: 10px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px 0px #000000
+}
+
+@media(max-width:1800px) {
+    .pn {
+        width: 100%;
+    }
+}
+
+.results p {
+    margin: 10px 5%;
+    padding-bottom: 50px;
+}
+
+.cell {
+    border-left: 2px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(182, 161, 161, 0.103);
+    color: white;
+    cursor: pointer;
+}
+
+.color-picker p {
+    color: rgb(189, 189, 189);
+    transform: translateY(25%);
+    font-size: 20px;
+}
+
+h3 {
+    margin: 5px;
+    color: rgba(255, 255, 255, 0.705);
+    text-align: center;
+    width: 100%;
+    font-size: 40px;
+}
+
+.table {
+    color: white;
+}
+
+.choose {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin: 8px;
+}
+
+.orange {
+    background-color: rgb(231, 79, 59);
+}
+
+.red {
+    background-color: red;
+}
+
+.cyan {
+    background-color: rgb(54, 140, 211);
+}
+
+.blue {
+    background-color: blue;
+}
+
+.white {
+    background-color: white;
+}
+
+.aqua {
+    background-color: aqua
+}
+
+.darkgoldenrod {
+    background-color: darkgoldenrod
+}
+
+.color-picker {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.not-expanded .table {
+    display: none;
+}
+
+h2 {
+    cursor: pointer;
+}
+
+.input {
+    text-align: center;
+    font-size: 20px;
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+}
+
+button {
+    margin-bottom: 20px;
+}
+
+.results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.BST,
+.BSP,
+.BSM,
+.AC {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    margin-right: 25px;
+    margin-left: 25px;
+}
+
+.BS h4 {
+    margin-bottom: 15px;
+    color: rgb(112, 120, 194);
+    font-size: 30px;
+}
+
+.BS h6 {
+    font-size: 24px;
+}
+
+#notes {
+    margin-bottom: 15px;
+}
