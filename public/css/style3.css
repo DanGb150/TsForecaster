@@ -7,14 +7,13 @@ h1 {
 }
 
 body {
-    height: 100vh;
     width: 100vw;
     font-family: 'Oswald', sans-serif;
     letter-spacing: 0.4px;
-    background-image: radial-gradient(rgb(10, 25, 70), rgb(28, 3, 48), rgb(0, 0, 0));
-    color: white;
+    background: radial-gradient(ellipse at top, rgb(0, 58, 68),#181738);
     transition: display 2s ease-out;
     overflow-x: hidden;
+    color:white;
 }
 
 .links-container {
@@ -34,7 +33,7 @@ h1,
     font-size: 38px;
 }
 
-.links a {
+.links p a {
     text-decoration: none;
     margin-left: 10px;
     color: rgb(0, 73, 168);
@@ -185,6 +184,10 @@ button {
     margin-left: 25px;
 }
 
+.LG{
+    margin-bottom:85px;
+}
+
 .BS h4 {
     margin-bottom: 15px;
     color: rgb(112, 120, 194);
@@ -197,4 +200,5 @@ button {
 
 #notes {
     margin-bottom: 15px;
+    color: rgb(112, 120, 194)
 }

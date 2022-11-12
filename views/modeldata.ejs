@@ -16,16 +16,16 @@
             <section class="links">
                 <p>Model: <a
                         href="https://www.pivotalweather.com/model.php?m=gfs&p=prateptype_cat_mm&rh=2022050206&fh=loop&r=eu&dpdt=&mc=">GFS</a>
-                    - Best for precip in mid-long term period</p>
+                    - <span class="conclusion"></span></p>
                 <p>Model: <a
                         href="https://www.pivotalweather.com/model.php?m=ecmwf&p=prateptype_cat_mm&rh=2022050206&fh=loop&r=eu&dpdt=&mc=">ECMWF</a>
-                    - Good for any period of time</p>
+                    - <span class="conclusion"></span></p>
                 <p>Model: <a
                         href="https://wxcharts.com/?panel=default&model=icon_eu,icon_eu,icon_eu,icon_eu&region=romania&chart=overview,850temp,wind10mkph,snowdepth&run=06&step=003&plottype=10&lat=44.942&lon=26.024&skewtstep=0">
-                        ICON</a> - Best for detailed first 2 days look</p>
+                        ICON</a> - <span class="conclusion"></span></p>
                 <p>Model: <a
                         href="https://www.pivotalweather.com/model.php?m=gefsens&p=sfcmslp&rh=2022050200&fh=loop&r=eu&dpdt=&mc=">GEFS</a>
-                    - Worst - needs a high calibration!</p>
+                    - <span class="conclusion"></span></p>
             </section>
         </div>
         <h1>How did we obtain our data?</h1>
@@ -36,15 +36,15 @@
             <section class="panels not-expanded" id="tmpanels">
                 <h3>Temperature at 2m</h3>
                 <span class="color-picker">
-                    <p>Error of less than -2</p>
+                    <p>Positive Values Completely Missed</p>
                     <div class="choose blue"></div>
-                    <p>Error of -2 </p>
+                    <p>Positive Values Partially Missed</p>
                     <div class="choose cyan"></div>
                     <p>Correct forecast</p>
                     <div class="choose white"></div>
-                    <p>Error of +2</p>
+                    <p>Negative Values Partially Missed</p>
                     <div class="choose orange"></div>
-                    <p>Error of more than +2 </p>
+                    <p>Negative Values Completely Missed</p>
                     <div class="choose red"></div>
                 </span>
                 <div class="pn tm" id="1">
@@ -182,7 +182,16 @@
             for (let i = 1; i <= ar.length; i++) {
                 let el = ar[i]
                 if (el === '/') {
-                    let found = ar.slice(i - 2, i + 3)
+                    let found
+                    if(ar[i-3]!==';'&&ar[i+3]!=='&'){
+                        found= ar.slice(i - 3, i + 4)
+                    }else if(ar[i-3]!==';'){
+                        found = ar.slice(i - 3, i + 3)
+                    }else if(ar[i+3]!=='&'){
+                        found = ar.slice(i - 2, i + 4)
+                    }else{
+                        found=ar.slice(i-2,i+3)
+                    }
                     let el = found.join('')
                     newar.splice(i, 0, el)
                 }
@@ -271,37 +280,47 @@
                             let dif = verification - forecast
                             dif = dif || 0
                             differences.push(dif)
-                            if (forecast >= 10 && verification >= 10) {
-                                if (verification < forecast + 2 && verification > forecast - 2) {
+                            if ((forecast > 2 && verification > 2)||(forecast<-2&&verification<-2)) {
+                                if (days < 3) { whitesh++ }
+                                else if (days < 6) { whitemd++ }
+                                else { whitelg++}
+                                white++;
+                                td.setAttribute('style', 'background-color:white')
+                            }
+                            else if((forecast>2&&verification<=0)){
+                                red++;
+                                td.setAttribute('style', 'background-color:red')
+                            }else if((forecast<-2&&verification>=0)){
+                                blue++;
+                                td.setAttribute('style', 'background-color:blue')
+                            }else{
+                                if((forecast>0&&verification>0)||(forecast<0&&verification<0)||(forecast===0&&verification===0)){
+                                    white++;
                                     if (days < 3) { whitesh++ }
                                     else if (days < 6) { whitemd++ }
                                     else { whitelg++}
-                                    white++;
                                     td.setAttribute('style', 'background-color:white')
                                 }
-                                else if (verification == forecast - 2) {
-                                    red = red + 0.5;
-                                    white = white + 0.5;
-                                    if (days < 3) { whitesh = whitesh + 0.5 }
-                                    else if (days < 6) { whitemd = whitemd + 0.5 }
-                                    else { whitelg = whitelg + 0.5}
-                                    td.setAttribute('style', 'background-color: rgb(231, 79, 59)')
-                                }
-                                else if (verification < forecast - 2) {
-                                    red++;
-                                    td.setAttribute('style', 'background-color:red')
-                                }
-                                else if (verification == forecast + 2) {
-                                    blue = blue + 0.5;
-                                    white = white + 0.5;
-                                    if (days < 3) { whitesh = whitesh + 0.5 }
-                                    else if (days < 6) { whitemd = whitemd + 0.5 }
-                                    else { whitelg = whitelg + 0.5}
+                                else if(forecast>=0&&forecast-verification>=2){
+                                    red=red+0.5
+                                    if (days < 3) { whitesh=whitesh+0.5}
+                                    else if (days < 6) { whitemd=whitemd+0.5 }
+                                    else { whitelg=whitelg+0.5}
+                                    white=white+0.5
+                                    td.setAttribute('style', 'background-color:rgb(231, 79, 59)')
+                                }else if(forecast<=-1&&forecast-verification<=-2){
+                                    blue=blue+0.5
+                                    if (days < 3) { whitesh=whitesh+0.5}
+                                    else if (days < 6) { whitemd=whitemd+0.5 }
+                                    else { whitelg=whitelg+0.5}
+                                    white=white+0.5
                                     td.setAttribute('style', 'background-color:rgb(54, 140, 211)')
-                                }
-                                else if (verification > forecast + 2) {
-                                    blue++;
-                                    td.setAttribute('style', 'background-color:blue')
+                                }else if(forecast===0||verification===0){
+                                    white++;
+                                    if (days < 3) { whitesh++ }
+                                    else if (days < 6) { whitemd++ }
+                                    else { whitelg++}
+                                    td.setAttribute('style', 'background-color:white')
                                 }
                             }
                         }
@@ -333,6 +352,7 @@
             createTable(panels[0], 10, 10)
             createTable(panels[1], 10, 10)
             createTable(panels[2], 5, 10)
+
             createTable(panels[3], 10, 10)
             createTable(panels[4], 10, 10)
             createTable(panels[5], 10, 10)
@@ -514,12 +534,12 @@
                     concl.innerText = ` - ${models[i]} is well balanced`
                     CL.appendChild(concl)
                 }
-                if ((lesst[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100 && lesst[i] / totalcells[i] * 100 > moret[i] / totalcells[i] * 100) || calibs[i] >= 1) {
+                if ((lesst[i] > correct[i] && lesst[i]> moret[i]) || calibs[i] >= 1) {
                     const concl = document.createElement('h6')
                     concl.innerText = ` - ${models[i]} needs a calibration of +${Math.round(calibs[i] * 10) / 10} deg C`
                     CL.appendChild(concl)
                 }
-                else if ((moret[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100) || calibs[i] <= -1) {
+                else if ((moret[i]  > correct[i]) || calibs[i] <= -1) {
                     const concl = document.createElement('h6')
                     concl.innerText = ` - ${models[i]} needs a calibration of ${Math.round(calibs[i] * 10) / 10} deg C`
                     CL.appendChild(concl)
@@ -527,17 +547,52 @@
             }
             //CALIBP
             for (i = 3; i < 8; i++) {
-                if (lessp[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100 && lessp[i] / totalcells[i] * 100 > morep[i] / totalcells[i] * 100) {
-                    const concl = document.createElement('h6')
-                    concl.innerText = ` - ${models[i]} tends to forecast too dry conditions`
-                    CL.appendChild(concl)
-                }
-                else if (morep[i] / totalcells[i] * 100 > correct[i] / totalcells[i] * 100 && morep[i] / totalcells[i] * 100 > lessp[i] / totalcells[i] * 100) {
-                    const concl = document.createElement('h6')
-                    concl.innerText = ` - ${models[i]} tends to forecast too rainy conditions`
-                    CL.appendChild(concl)
-                }
+                
             }
+
+
+            //GET CONCLUSION FUNCTION
+            const getConclusion = (missedPos, missedNeg, dryBased, wetBased,totalValues) => {
+  let conclusion;
+  if (wetBased >= dryBased + 2&&wetBased/totalValues>25) {
+    if (missedNeg >= missedPos+2 &&missedNeg/totalValues*100>25) {
+      conclusion = `${Math.round((missedNeg/(totalValues)*(wetBased/(totalValues)))*100)}% tendency to favour MORE FREQUENT Precip and in form of RAIN`;
+    } else if (missedNeg+2 <= missedPos &&missedPos/(totalValues)*100>25) {
+      conclusion = `${Math.round((missedPos/(totalValues)*(wetBased/(totalValues)))*100)}% tendency to favour MORE FREQUENT Precip and in form of SNOW`;
+    } else {
+      conclusion = `${Math.round(wetBased/(totalValues)*100)}% tendency to favour the CORRECT TYPE of Precip, However ,MORE FREQUENT than normal`;
+    }
+  } else if (wetBased + 2 <= dryBased&&dryBased/totalValues*100>25) {
+    if (missedNeg >= missedPos+2&&missedNeg/totalValues*100>25) {
+      conclusion = `${Math.round((missedNeg/(totalValues)*(dryBased/(totalValues)))*100)}% tendency to favour LESS FREQUENT Precip and in form of RAIN `;
+    } else if (missedNeg+2 <= missedPos&&missedPos/totalValues*100>25) {
+      conclusion = `${Math.round((missedPos/(totalValues)*(dryBased/(totalValues)))*100)}% tendency to favour LESS FREQUENT Precip and in form of SNOW `;
+    } else {
+      conclusion = `${Math.round(dryBased/(totalValues)*100)}% tendency to favour the CORRECT TYPE of Precip, However ,LESS FREQUENT than normal`
+    }
+  } else {
+    if (missedNeg >= missedPos+2&&missedNeg/totalValues*100>25) {
+      conclusion = `${Math.round(missedNeg/(totalValues)*100)}% tendency to favour Precip in form of RAIN in the CORRECT AMOUNT `;
+    } else if (missedNeg+2 <= missedPos&&missedPos/totalValues*100>25) {
+      conclusion = `${Math.round(missedPos/(totalValues)*100)}% tendency to favour Precip in form of SNOW in the CORRECT AMOUNT `;
+    } else {
+      conclusion = 'The model correctly predicts Precipitation Amount And Type'.toUpperCase()
+    }
+  }
+  return conclusion;
+}
+
+
+            //CONCLUSION
+            let conclusions=[]
+            for (i=0;i<4;i++){
+                const conclusion=getConclusion(lesst[i],moret[i],lessp[i+4],morep[i+4],10)
+                conclusions.push(conclusion)
+            }   
+            const conclusionEls=document.querySelectorAll('.conclusion')     
+            conclusionEls.forEach((conclusionEl,i)=>{
+              conclusionEl.innerText=conclusions[i]
+            })
         </script>
 </body>
 
